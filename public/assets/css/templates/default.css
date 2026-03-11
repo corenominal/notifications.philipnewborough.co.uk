@@ -1,0 +1,46 @@
+#main ~ footer {
+    font-size: .8rem;
+}
+
+.topnav-item:first-child,
+.topnav-item + .topnav-item {
+    border-top: 1px solid var(--bs-border-color);
+}
+
+.topnav-item > .nav-link {
+    transition: background-color 0.2s ease;
+}
+
+.topnav-item > .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #fff !important;
+}
+
+@media (min-width: 992px) {
+    .topnav-item:first-child {
+        border-top: none;
+    }
+
+    .topnav-item + .topnav-item {
+        border-top: none;
+        border-left: 1px solid var(--bs-border-color);
+    }
+
+    #topNav {
+        align-self: stretch;
+    }
+
+    #topNav .navbar-nav {
+        height: 100%;
+    }
+
+    #topNav .topnav-item {
+        display: flex;
+        align-items: stretch;
+    }
+
+    #topNav .topnav-item > .nav-link {
+        display: flex;
+        align-items: center;
+    }
+}
