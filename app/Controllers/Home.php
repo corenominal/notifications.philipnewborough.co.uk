@@ -5,21 +5,23 @@ namespace App\Controllers;
 class Home extends BaseController
 {
     /**
-     * Display the home page
+     * Default controller action for the home route.
      *
-     * Renders the home view with associated stylesheets and scripts.
-     * Sets up the page title and passes data to the view layer.
+     * Checks the current session for an `is_admin` flag and redirects accordingly:
+     * - Redirects administrators to the admin dashboard (`/admin`).
+     * - Redirects all other users to the configured top-level domain URL
+     *   (`config('Urls')->tld`).
      *
-     * @return string The rendered home view
+     * @return \CodeIgniter\HTTP\RedirectResponse Redirect response to the appropriate destination.
      */
-    public function index(): string
+    public function index()
     {
-        // Array of javascript files to include
-        $data['js'] = ['home'];
-        // Array of CSS files to include
-        $data['css'] = ['home'];
-        // Set the page title
-        $data['title'] = 'Template Home';
-        return view('home', $data);
+        // If session has is_admin, redirect to admin dashboard
+        if (session()->has('is_admin')) {
+            return redirect()->to('/admin');
+        } else {
+            return redirect()->to(config('Urls')->tld);
+        }
+
     }
 }
