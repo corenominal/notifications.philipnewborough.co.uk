@@ -9,37 +9,31 @@ use CodeIgniter\HTTP\ResponseInterface;
 class ApiFilter implements FilterInterface
 {
     /**
-     * Filter to validate API requests before they are processed.
+     * Runs before incoming API requests to enforce CORS and API authentication rules.
      *
-     * This filter handles CORS policies and API key validation. It performs the following checks:
-     * - Sets CORS headers to allow cross-origin requests
-     * - Validates that an API key is provided in the request headers
-     * - Checks the API key against the master key first
-     * - If the master key doesn't match, validates against the authentication server
-     * - Requires a user UUID header for non-master-key requests
+     * This filter:
+     * - Sends CORS headers for cross-origin access.
+     * - Short-circuits preflight `OPTIONS` requests.
+     * - Requires an `apikey` header for all protected requests.
+     * - Accepts either:
+     *   - the configured master API key, or
+     *   - a user-scoped API key validated via the external auth service (requires `user-uuid`).
+     * - Enforces master-key-only access for `POST /api/notification`.
      *
-     * @param RequestInterface $request The incoming HTTP request object
-     * @param array|null $arguments Additional arguments passed to the filter
-     * @return void Exits with a JSON error response if validation fails
+     * On authentication failure, this method sends a `401 Unauthorized` response
+     * with a JSON error payload and terminates execution.
      *
-     * @throws void Exits with 401 Unauthorized status and JSON error message if:
-     *         - No API key is provided
-     *         - No user UUID is provided (when master key doesn't match)
-     *         - API key validation fails against the auth server
-     *         - API key is invalid
+     * @param RequestInterface $request   The incoming HTTP request instance.
+     * @param array<string>|null $arguments Optional filter arguments from route configuration.
      *
-     * @uses config('ApiKeys') Configuration object containing master API key
-     * @uses config('Urls') Configuration object containing auth server URL
-     * @uses curl_init() To initialize cURL connection to auth server
-     * @uses curl_setopt() To configure cURL options (URL, headers, return transfer)
-     * @uses curl_exec() To execute the cURL request to auth server
+     * @return void
      */
     public function before(RequestInterface $request, $arguments = null)
     {
         // CORS Policy
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PATCH, PUT, DELETE');
-        header('Access-Control-Allow-Headers: apikey, user-uuid, email, Content-Type, Content-Length, Accept-Encoding');
+        header('Access-Control-Allow-Headers: apikey, user-uuid, email, Content-Type, Content-Length, Accept-Encoding, x-requested-with');
         if ('OPTIONS' === $_SERVER['REQUEST_METHOD']) {
             exit();
         }
@@ -87,6 +81,14 @@ class ApiFilter implements FilterInterface
             if(isset($response->error)){
                 // Error response, set flag to false
                 $success = false;
+            }
+
+            // Test for POST request to /api/notification endpoint, if so, require master key
+            if ($request->getMethod() === 'post' && $request->getUri()->getPath() === '/api/notification') {
+                if ($config->masterKey != $apikey) {
+                    header('HTTP/1.1 401 Unauthorized', true, 401);
+                    exit(json_encode(['error' => 'Invalid API key for this endpoint. Master key required.']));
+                }
             }
         }
 
