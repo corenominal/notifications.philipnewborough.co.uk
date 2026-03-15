@@ -12,6 +12,7 @@
     "require": {
         "php": "^8.2",
         "codeigniter4/framework": "^4.7",
+        "hermawan/codeigniter4-datatables": "^0.8.0",
         "minishlink/web-push": "^10.0",
         "ramsey/uuid": "^4.9"
     },
