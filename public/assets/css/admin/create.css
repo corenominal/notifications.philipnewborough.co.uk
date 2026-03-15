@@ -1,0 +1,23 @@
+/* ── Notification preview panel ────────────────────────────────────────────── */
+
+#notification-preview .notification-icon {
+    flex-shrink: 0;
+    transition: transform 0.25s ease;
+}
+
+#notification-preview li:hover .notification-icon {
+    transform: scale(1.15);
+}
+
+#notification-preview .notification-icon-placeholder {
+    width: 40px;
+    height: 40px;
+}
+
+#notification-preview .notification-clear-btn {
+    position: absolute;
+    top: 0.45rem;
+    right: 0.8rem;
+    z-index: 2;
+    font-size: 0.65em;
+}

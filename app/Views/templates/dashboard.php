@@ -114,7 +114,7 @@
                         <ul class="nav flex-column mb-3">
                             <li class="nav-item">
                                 <a class="nav-link d-flex align-items-center gap-2 text-white-50 px-3 py-2" href="/admin">
-                                    <i class="bi bi-speedometer2"></i> Dashboard
+                                    <i class="bi bi-bell-fill"></i> Notifications
                                 </a>
                             </li>
                         </ul>

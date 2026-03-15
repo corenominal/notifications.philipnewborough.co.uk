@@ -9,6 +9,18 @@ $routes->get('/', 'Home::index');
 
 // Admin routes
 $routes->get('/admin', 'Admin\Home::index');
+$routes->get('/admin/datatable', 'Admin\Home::datatable');
+$routes->get('/admin/notification/(:segment)', 'Admin\Home::getNotification/$1');
+$routes->post('/admin/notifications/delete', 'Admin\Home::delete');
+$routes->post('/admin/notification/update', 'Admin\Home::update');
+
+$routes->get('/admin/create', 'Admin\Create::index');
+$routes->post('/admin/create', 'Admin\Create::create');
+
+// Admin create icon upload and listing
+$routes->match(['post', 'options'], '/admin/create/icon-upload', 'Admin\Create::iconUpload');
+$routes->match(['get', 'options'], '/admin/create/icons', 'Admin\Create::iconsList');
+$routes->match(['get', 'options'], '/admin/create/users-search', 'Admin\Create::usersSearch');
 
 // API routes
 $routes->match(['get', 'options'], '/api/test/ping', 'Api\Test::ping');

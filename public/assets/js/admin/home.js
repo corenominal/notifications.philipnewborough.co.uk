@@ -1,171 +1,256 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const sidebarLinks = document.querySelectorAll("#sidebar .nav-link");
-    sidebarLinks.forEach(link => {
+document.addEventListener("DOMContentLoaded", function () {
+
+    // Mark sidebar link as active
+    document.querySelectorAll("#sidebar .nav-link").forEach(function (link) {
         if (link.getAttribute("href") === "/admin") {
             link.classList.remove("text-white-50");
             link.classList.add("active");
         }
     });
-});
 
-document.addEventListener("DOMContentLoaded", function() {
-
-    const exampleTable = new DataTable('#example-table', {
-
-        // ── Layout & UI ────────────────────────────────────────────────────────
-        autoWidth:      true,           // Auto-calculate column widths
-        info:           true,           // Show "Showing X to Y of Z entries"
-        lengthChange:   true,           // Allow user to change page length
-        ordering:       true,           // Enable column sorting
-        paging:         true,           // Enable pagination
-        searching:      true,           // Enable global search box
-        orderMulti:     true,           // Allow multi-column sort (shift+click)
-        orderClasses:   true,           // Add sorting CSS classes to columns
-        pagingType:     'simple_numbers', // 'simple' | 'simple_numbers' | 'full' | 'full_numbers' | 'first_last_numbers'
-        pageLength:     10,             // Rows per page
-        lengthMenu:     [10, 25, 50, 100], // Page length options
-
-        // ── Default sort ───────────────────────────────────────────────────────
-        order: [[0, 'asc']],            // [[columnIndex, 'asc'|'desc'], ...]
-
-        // ── Performance ────────────────────────────────────────────────────────
-        deferRender:    false,          // Defer rendering off-screen rows (useful for large datasets)
-        processing:     false,          // Show a processing indicator (useful with serverSide)
-        serverSide:     false,          // Enable server-side processing (requires ajax option)
-        stateSave:      false,          // Persist state (paging, sorting, search) in sessionStorage
-
-        // ── Data source ────────────────────────────────────────────────────────
-        // ajax: '/api/example-table',  // URL or config object for server-side / ajax data loading
-        // data: [],                    // Inline JS data array (alternative to HTML or ajax)
-
-        // ── Scroll ─────────────────────────────────────────────────────────────
-        scrollX:        false,          // Horizontal scrolling
-        scrollY:        '',             // Vertical scroll height, e.g. '400px'
-        scrollCollapse: false,          // Shrink table when fewer rows than scrollY height
-
-        // ── Column definitions ─────────────────────────────────────────────────
+    // Initialise DataTable
+    const table = $("#example-table").DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "/admin/datatable",
+        order: [[5, "desc"]],
         columns: [
+            { data: null,           orderable: false, searchable: false, className: "text-center" },
+            { data: "icon",  orderable: false, searchable: false, className: "text-center" },
+            { data: "title" },
+            { data: "body",         orderable: false },
+            { data: "calltoaction", orderable: false, searchable: false },
+            { data: "created_at" },
+            { data: "is_read",      orderable: false, searchable: false, className: "text-center" },
+            { data: "is_cleared",   orderable: false, searchable: false, className: "text-center" },
+            { data: "actions",      orderable: false, searchable: false, className: "text-center" },
+        ],
+        columnDefs: [
             {
-                // Column 0 — #
-                name:        'id',
-                title:       '#',
-                type:        'num',         // 'string' | 'num' | 'num-fmt' | 'html' | 'html-num' | 'date'
-                orderable:   true,
-                searchable:  false,         // No value in searching the row number
-                visible:     true,
-                width:       '3rem',
-                className:   'text-end',
-            },
-            {
-                // Column 1 — First Name
-                name:        'first_name',
-                title:       'First Name',
-                type:        'string',
-                orderable:   true,
-                searchable:  true,
-                visible:     true,
-                width:       '',            // Leave empty to let autoWidth decide
-                className:   '',
-            },
-            {
-                // Column 2 — Last Name
-                name:        'last_name',
-                title:       'Last Name',
-                type:        'string',
-                orderable:   true,
-                searchable:  true,
-                visible:     true,
-                width:       '',
-                className:   '',
-            },
-            {
-                // Column 3 — Email
-                name:        'email',
-                title:       'Email',
-                type:        'string',
-                orderable:   true,
-                searchable:  true,
-                visible:     true,
-                width:       '',
-                className:   '',
-            },
-            {
-                // Column 4 — Role
-                name:        'role',
-                title:       'Role',
-                type:        'string',
-                orderable:   true,
-                searchable:  true,
-                visible:     true,
-                width:       '',
-                className:   '',
-            },
-            {
-                // Column 5 — Status (contains HTML, so we use a custom render function to ensure sorting and searching work on the text content, not the HTML)
-                name:        'status',
-                title:       'Status',
-                type:        'string',
-                orderable:   true,
-                searchable:  true,
-                visible:     true,
-                width:       '6rem',
-                className:   'text-center',
-                render: function(data, type, row) {
-                    if (type === 'sort' || type === 'filter') {
-                        const tmp = document.createElement('div');
-                        tmp.innerHTML = data;
-                        return tmp.textContent || tmp.innerText || '';
-                    }
-                    return data;
+                targets: 0,
+                render: function () {
+                    return '<input type="checkbox" class="form-check-input row-checkbox">';
                 },
             },
-            {
-                // Column 6 — Joined (ISO date string sorts correctly as a string)
-                name:        'joined',
-                title:       'Joined',
-                type:        'date',
-                orderable:   true,
-                searchable:  false,
-                visible:     true,
-                width:       '7rem',
-                className:   '',
-            },
         ],
-
-        // ── Language / localisation ────────────────────────────────────────────
-        language: {
-            emptyTable:     'No data available in table',
-            info:           'Showing _START_ to _END_ of _TOTAL_ entries',
-            infoEmpty:      'Showing 0 to 0 of 0 entries',
-            infoFiltered:   '(filtered from _MAX_ total entries)',
-            lengthMenu:     'Show _MENU_ entries',
-            loadingRecords: 'Loading...',
-            processing:     'Processing...',
-            search:         'Search:',
-            zeroRecords:    'No matching records found',
-            paginate: {
-                first:    'First',
-                last:     'Last',
-                next:     'Next',
-                previous: 'Previous',
-            },
-        },
-
-        // ── Callbacks ──────────────────────────────────────────────────────────
-        // initComplete: function(settings, json) {},   // Fires once table is fully initialised
-        // drawCallback: function(settings) {},         // Fires on every draw (page change, sort, search)
-        // rowCallback:  function(row, data, index) {}, // Fires for each row on every draw
-        // createdRow:   function(row, data, index) {}, // Fires once per row when the TR element is created
-        // headerCallback: function(thead, data, start, end, display) {},
-
     });
 
-    // ── Refresh button ─────────────────────────────────────────────────────────
-    document.getElementById('btn-datatable-refresh').addEventListener('click', function() {
-        // exampleTable.ajax.reload(null, false); // null keeps current page; false = don't reset paging
-        // For non-ajax tables use exampleTable.draw() to simply redraw:
-        exampleTable.draw();
-        console.log('Table refreshed');
+    // --- Row selection ---
+
+    function getSelectedUuids() {
+        const uuids = [];
+        table.rows().nodes().to$().find(".row-checkbox:checked").each(function () {
+            uuids.push($(this).closest("tr").attr("id"));
+        });
+        return uuids;
+    }
+
+    function updateDeleteButton() {
+        const count = table.rows().nodes().to$().find(".row-checkbox:checked").length;
+        $("#btn-delete-selected").prop("disabled", count === 0);
+    }
+
+    function syncSelectAll() {
+        const all   = table.rows().nodes().to$().find(".row-checkbox").length;
+        const checked = table.rows().nodes().to$().find(".row-checkbox:checked").length;
+        const selectAll = document.getElementById("select-all");
+        selectAll.checked       = all > 0 && checked === all;
+        selectAll.indeterminate = checked > 0 && checked < all;
+    }
+
+    // Select-all header checkbox
+    $("#select-all").on("change", function () {
+        const checked = this.checked;
+        table.rows().nodes().to$().find(".row-checkbox").prop("checked", checked);
+        updateDeleteButton();
+    });
+
+    // Individual row checkbox
+    $("#example-table").on("change", ".row-checkbox", function () {
+        syncSelectAll();
+        updateDeleteButton();
+    });
+
+    // Reset selection state after each DataTables draw
+    table.on("draw", function () {
+        document.getElementById("select-all").checked       = false;
+        document.getElementById("select-all").indeterminate = false;
+        updateDeleteButton();
+    });
+
+    // --- Refresh ---
+
+    $("#btn-datatable-refresh").on("click", function () {
+        table.ajax.reload(null, false);
+    });
+
+    // --- Edit modal ---
+
+    const editModal        = new bootstrap.Modal(document.getElementById("editModal"));
+    const $editUuid        = $("#edit-uuid");
+    const $editTitle       = $("#edit-title");
+    const $editBody        = $("#edit-body");
+    const $editUrl         = $("#edit-url");
+    const $editCta         = $("#edit-calltoaction");
+    const $editIsRead      = $("#edit-is-read");
+    const $editIsCleared   = $("#edit-is-cleared");
+    const $editStatusFields = $("#edit-status-fields");
+    const $editError       = $("#edit-modal-error");
+    const $confirmEdit     = $("#btn-confirm-edit");
+
+    $("#example-table").on("click", ".btn-edit-row", function () {
+        const uuid = $(this).data("uuid");
+        $editError.addClass("d-none").text("");
+        $editUuid.val("");
+        $editTitle.val("");
+        $editBody.val("");
+        $editUrl.val("");
+        $editCta.val("");
+        $editIsRead.prop("checked", false);
+        $editIsCleared.prop("checked", false);
+        $editStatusFields.addClass("d-none");
+        $confirmEdit.prop("disabled", true).text("Save changes");
+
+        fetch("/admin/notification/" + encodeURIComponent(uuid))
+            .then(function (response) {
+                if (! response.ok) throw new Error("Server returned " + response.status);
+                return response.json();
+            })
+            .then(function (json) {
+                if (! json.success) throw new Error(json.message || "Failed to load notification.");
+                $editUuid.val(json.data.uuid);
+                $editTitle.val(json.data.title);
+                $editBody.val(json.data.body);
+                $editUrl.val(json.data.url);
+                $editCta.val(json.data.calltoaction);
+                if (json.data.user_uuid !== "everyone") {
+                    $editIsRead.prop("checked", json.data.is_read == 1);
+                    $editIsCleared.prop("checked", json.data.is_cleared == 1);
+                    $editStatusFields.removeClass("d-none");
+                } else {
+                    $editStatusFields.addClass("d-none");
+                }
+                $confirmEdit.prop("disabled", false);
+                editModal.show();
+            })
+            .catch(function (err) {
+                console.error("Edit load failed:", err);
+            });
+    });
+
+    $confirmEdit.on("click", function () {
+        const uuid  = $editUuid.val().trim();
+        const title = $editTitle.val().trim();
+        const body  = $editBody.val().trim();
+        const url          = $editUrl.val().trim();
+        const calltoaction = $editCta.val().trim();
+
+        $editError.addClass("d-none").text("");
+
+        if (title === "" || body === "" || url === "") {
+            $editError.text("Title, body, and URL are required.").removeClass("d-none");
+            return;
+        }
+
+        $confirmEdit.prop("disabled", true).html('<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Saving…');
+
+        const payload = { uuid, title, body, url, calltoaction };
+        if (! $editStatusFields.hasClass("d-none")) {
+            payload.is_read    = $editIsRead.prop("checked");
+            payload.is_cleared = $editIsCleared.prop("checked");
+        }
+
+        fetch("/admin/notification/update", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+        })
+            .then(function (response) {
+                if (! response.ok) throw new Error("Server returned " + response.status);
+                return response.json();
+            })
+            .then(function (json) {
+                if (! json.success) throw new Error(json.message || "Failed to save.");
+                editModal.hide();
+                table.ajax.reload(null, false);
+            })
+            .catch(function (err) {
+                $editError.text(err.message || "An error occurred. Please try again.").removeClass("d-none");
+            })
+            .finally(function () {
+                $confirmEdit.prop("disabled", false).text("Save changes");
+            });
+    });
+
+    document.getElementById("editModal").addEventListener("hidden.bs.modal", function () {
+        $editError.addClass("d-none").text("");
+    });
+
+    // --- Delete modal ---
+
+    const deleteModal     = new bootstrap.Modal(document.getElementById("deleteModal"));
+    const $modalMessage   = $("#delete-modal-message");
+    const $confirmBtn     = $("#btn-confirm-delete");
+    let pendingUuids      = [];
+
+    function openDeleteModal(uuids) {
+        pendingUuids = uuids;
+        const n = uuids.length;
+        $modalMessage.text(
+            n === 1
+                ? "Are you sure you want to delete this notification? This action cannot be undone."
+                : "Are you sure you want to delete " + n + " notifications? This action cannot be undone."
+        );
+        deleteModal.show();
+    }
+
+    // Single-row delete button
+    $("#example-table").on("click", ".btn-delete-row", function () {
+        const uuid = $(this).data("uuid");
+        openDeleteModal([uuid]);
+    });
+
+    // Bulk delete button
+    $("#btn-delete-selected").on("click", function () {
+        const uuids = getSelectedUuids();
+        if (uuids.length > 0) {
+            openDeleteModal(uuids);
+        }
+    });
+
+    // Confirm deletion
+    $confirmBtn.on("click", function () {
+        if (pendingUuids.length === 0) return;
+
+        $confirmBtn.prop("disabled", true).html('<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Deleting…');
+
+        fetch("/admin/notifications/delete", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ uuids: pendingUuids }),
+        })
+            .then(function (response) {
+                if (! response.ok) {
+                    throw new Error("Server returned " + response.status);
+                }
+                return response.json();
+            })
+            .then(function () {
+                deleteModal.hide();
+                table.ajax.reload(null, false);
+            })
+            .catch(function (err) {
+                console.error("Delete failed:", err);
+            })
+            .finally(function () {
+                pendingUuids = [];
+                $confirmBtn.prop("disabled", false).text("Delete");
+            });
+    });
+
+    // Clear pending state when modal is closed without confirming
+    document.getElementById("deleteModal").addEventListener("hidden.bs.modal", function () {
+        pendingUuids = [];
     });
 
 });
