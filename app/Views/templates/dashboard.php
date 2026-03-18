@@ -72,13 +72,9 @@
                             <a class="nav-link text-white-50 py-3 py-lg-0 px-3" href="<?= config('Urls')->startpage ?>"><i class="bi bi-slash-square-fill me-1"></i> Startpage</a>
                         </li>
                         <?php endif; ?>
-                        <?php // is_admin session is set and true
-                        if( session()->get('is_admin') ):
-                        ?>
                         <li class="nav-item topnav-item">
-                            <a class="nav-link text-white-50 py-3 py-lg-0 px-3 trigger-appmenu" href="#"><i class="bi bi-grid-3x3-gap-fill me-1"></i> App Menu</a>
+                            <a data-api-url="<?= config('Urls')->appmenu ?>" class="nav-link text-white-50 py-3 py-lg-0 px-3 trigger-appmenu" href="#"><i class="bi bi-grid-3x3-gap-fill me-1"></i> App Menu</a>
                         </li>
-                        <?php endif; ?>
                         <?php // If user_uuid session is set, show notification bell and logout link, otherwise show login link
                         if( session()->get('user_uuid') ): ?>
                         <li class="nav-item topnav-item">

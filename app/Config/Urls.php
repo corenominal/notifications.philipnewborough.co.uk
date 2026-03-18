@@ -8,6 +8,7 @@ class Urls extends BaseConfig
 {
     public $tld = '';
     public $startpage = '';
+    public $appmenu = '';
     public $auth = '';
     public $assets = '';
     public $sendmail = '';
