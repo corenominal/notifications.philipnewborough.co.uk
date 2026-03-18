@@ -24,7 +24,9 @@
         <script defer src="<?= config('Urls')->assets ?>assets/js/vendor/bootstrap.bundle.min.js"></script>
         <script defer src="<?= config('Urls')->assets ?>assets/js/shared/logout.js"></script>
         <script defer src="<?= config('Urls')->assets ?>assets/js/shared/appmenu.js"></script>
+        <?php if( session()->get('user_uuid') ): ?>
         <script defer src="<?= config('Urls')->assets ?>assets/js/shared/notifications.js"></script>
+        <?php endif; ?>
         <?php if(isset($datatables) && $datatables): ?>
         <script defer src="<?= config('Urls')->assets ?>assets/js/vendor/jquery.min.js"></script>
         <script defer src="<?= config('Urls')->assets ?>assets/js/vendor/datatables.min.js"></script>
@@ -83,7 +85,7 @@
                         <?php // If user_uuid session is set, show notification bell and logout link, otherwise show login link
                         if( session()->get('user_uuid') ): ?>
                         <li class="nav-item topnav-item">
-                            <a data-api-url="<?= config('Urls')->notifications ?>" data-apikey="<?= esc(service('request')->getCookie('apikey') ?? '') ?>" data-user-uuid="<?= session()->get('user_uuid') ?>" class="nav-link text-white-50 py-3 py-lg-0 px-3 trigger-notifications" href="#"><i id="notification-bell" class="bi bi-bell-fill me-1"></i><span class="d-lg-none me-1"> Notifications</span></a>
+                            <a data-api-url="<?= config('Urls')->notifications ?>" class="nav-link text-white-50 py-3 py-lg-0 px-3 trigger-notifications" href="#"><i id="notification-bell" class="bi bi-bell-fill me-1"></i><span class="d-lg-none me-1"> Notifications</span></a>
                         </li>
                         <li class="nav-item topnav-item">
                             <a class="nav-link text-white-50 py-3 py-lg-0 px-3 trigger-logout" href="#"><i class="bi bi-box-arrow-right me-1"></i> Logout</a>
