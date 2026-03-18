@@ -91,6 +91,7 @@ class AuthFilter implements FilterInterface
                 'token' => $token,
                 'is_admin' => $response->is_admin,
                 'groups' => $response->groups,
+                'apikey' => $response->apikey,
             );
 
             // Set session data
