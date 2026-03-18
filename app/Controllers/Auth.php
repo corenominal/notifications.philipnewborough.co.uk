@@ -17,6 +17,6 @@ class Auth extends BaseController
         // Destroy the session
         session()->destroy();
         // Redirect to the auth logout page
-        return redirect()->to(config('Urls')->auth . '/logout');
+        return redirect()->to(config('Urls')->auth . 'logout');
     }
 }
