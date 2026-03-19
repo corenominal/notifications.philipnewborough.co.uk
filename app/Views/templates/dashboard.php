@@ -24,6 +24,7 @@
         <script defer src="<?= config('Urls')->assets ?>assets/js/vendor/bootstrap.bundle.min.js"></script>
         <script defer src="<?= config('Urls')->assets ?>assets/js/shared/logout.js"></script>
         <script defer src="<?= config('Urls')->assets ?>assets/js/shared/appmenu.js"></script>
+        <script defer src="<?= config('Urls')->assets ?>assets/js/shared/metrics.js"></script>
         <?php if( session()->get('user_uuid') ): ?>
         <script defer src="<?= config('Urls')->assets ?>assets/js/shared/notifications.js"></script>
         <?php endif; ?>

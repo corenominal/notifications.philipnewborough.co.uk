@@ -13,6 +13,7 @@ class Urls extends BaseConfig
     public $assets = '';
     public $sendmail = '';
     public $notifications = '';
+    public $metrics = '';
     public $logs = '';
     public $license = '';
     public $github = '';

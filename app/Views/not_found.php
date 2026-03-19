@@ -16,6 +16,7 @@
         <?php endforeach; endif; ?>
         <!-- JavaScript -->
         <script defer src="<?= config('Urls')->assets ?>assets/js/vendor/bootstrap.bundle.min.js"></script>
+        <script defer src="<?= config('Urls')->assets ?>assets/js/shared/metrics.js"></script>
         <?php if(isset($js)): foreach ($js as $file): $jsPath = FCPATH . 'assets/js/' . $file . '.js'; ?>
         <script defer src="/assets/js/<?= $file ?>.js<?= file_exists($jsPath) ? '?v=' . filemtime($jsPath) : '' ?>"></script>
         <?php endforeach; endif; ?>

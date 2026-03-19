@@ -26,6 +26,7 @@ class Filters extends BaseFilters
      */
     private const AUTH_EXCEPTIONS = [
         '/',
+        'metrics/receive',
         'cli/*',
         'api/*',
         'unauthorised',
@@ -37,6 +38,7 @@ class Filters extends BaseFilters
      */
     private const OPTIONAL_AUTH_ROUTES = [
         '/',
+        'metrics/receive',
     ];
 
     /**
